@@ -1,0 +1,15 @@
+{
+    "python.testing.pytestEnabled": true,
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": true,
+    "python.linting.flake8Enabled": true,
+    "python.terminal.activateEnvironment": true,
+    "python.defaultInterpreterPath": "./.venv/Scripts/python.exe",
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "files.exclude": {
+        "**/__pycache__": true,
+        ".pytest_cache": true,
+        "*.egg-info": true
+    }
+}
