@@ -2,9 +2,7 @@
 
 import os
 
-from eboekhouden.app import App
-from eboekhouden.models import Relatie
-from eboekhouden.types import RelatieType
+from eboekhouden import App, Relatie, RelatieType
 
 USERNAME: str = os.environ.get("USERNAME")
 SECURITY_CODE_1: str = os.environ.get("SECURITY_CODE_1")

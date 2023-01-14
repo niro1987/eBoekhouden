@@ -3,9 +3,7 @@
 from datetime import datetime
 import os
 
-from eboekhouden.app import App
-from eboekhouden.models import Factuur, FactuurRegel
-from eboekhouden.types import BTWCode, Eenheid
+from eboekhouden import App, BTWCode, Eenheid, Factuur, FactuurRegel
 
 USERNAME: str = os.environ.get("USERNAME")
 SECURITY_CODE_1: str = os.environ.get("SECURITY_CODE_1")
