@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from datetime import datetime
 import logging
 
-from eboekhouden.model import Model
+from eboekhouden.model import ModelBase
 from eboekhouden.types import BTWCode, InExBTW, MutatieSoort
 
 _LOGGER: logging.Logger = logging.getLogger(__name__)
@@ -38,7 +38,7 @@ NAME_MAPPING_REGEL: dict[str, str] = {
 
 
 @dataclass
-class MutatieRegel(Model):  # pylint: disable=too-many-instance-attributes
+class MutatieRegel(ModelBase):  # pylint: disable=too-many-instance-attributes
     """Mutatie Regel"""
 
     bedrag_invoer: float
@@ -59,7 +59,7 @@ class MutatieRegel(Model):  # pylint: disable=too-many-instance-attributes
 
 
 @dataclass
-class Mutatie(Model):  # pylint: disable=too-many-instance-attributes
+class Mutatie(ModelBase):  # pylint: disable=too-many-instance-attributes
     """Boekhoudmutatie"""
 
     soort: MutatieSoort

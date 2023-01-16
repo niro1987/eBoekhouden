@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 
-from eboekhouden.model import Model
+from eboekhouden.model import ModelBase
 from eboekhouden.types import RelatieType
 
 NAME_MAPPING: dict[str, str] = {
@@ -53,7 +53,7 @@ NAME_MAPPING: dict[str, str] = {
 
 
 @dataclass
-class Relatie(Model):  # pylint: disable=too-many-instance-attributes
+class Relatie(ModelBase):  # pylint: disable=too-many-instance-attributes
     """Relatie."""
 
     relatie_type: RelatieType  # pylint: disable=invalid-name

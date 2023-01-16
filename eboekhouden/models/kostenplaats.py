@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from eboekhouden.model import Model
+from eboekhouden.model import ModelBase
 
 NAME_MAPPING: dict[str, str] = {
     "kostenplaats_id": "KostenplaatsId",
@@ -12,7 +12,7 @@ NAME_MAPPING: dict[str, str] = {
 
 
 @dataclass
-class Kostenplaats(Model):
+class Kostenplaats(ModelBase):
     """Kostenplaats."""
 
     kostenplaats_id: int | None = None

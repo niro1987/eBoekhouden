@@ -2,7 +2,7 @@
 from abc import ABC, abstractmethod
 
 
-class Model(ABC):  # pylint: disable=too-few-public-methods
+class ModelBase(ABC):  # pylint: disable=too-few-public-methods
     """Basis class voor modellen."""
 
     @staticmethod

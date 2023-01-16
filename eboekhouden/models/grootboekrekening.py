@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from eboekhouden.model import Model
+from eboekhouden.model import ModelBase
 
 NAME_MAPPING: dict[str, str] = {
     "id": "ID",
@@ -14,7 +14,7 @@ NAME_MAPPING: dict[str, str] = {
 
 
 @dataclass
-class Grootboekrekening(Model):
+class Grootboekrekening(ModelBase):
     """Grootboekrekening."""
 
     id: int | None = None  # pylint: disable=invalid-name

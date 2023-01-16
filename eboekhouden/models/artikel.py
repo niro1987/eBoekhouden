@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from eboekhouden.model import Model
+from eboekhouden.model import ModelBase
 
 NAME_MAPPING: dict[str, str] = {
     "artikel_id": "ArtikelID",
@@ -23,7 +23,7 @@ NAME_MAPPING: dict[str, str] = {
 
 
 @dataclass
-class Artikel(Model):  # pylint: disable=too-many-instance-attributes
+class Artikel(ModelBase):  # pylint: disable=too-many-instance-attributes
     """Artikel."""
 
     artikel_id: int | None = None

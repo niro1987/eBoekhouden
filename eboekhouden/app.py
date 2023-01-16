@@ -9,7 +9,7 @@ import zeep
 from zeep.helpers import serialize_object
 
 from eboekhouden import models
-from eboekhouden.model import Model
+from eboekhouden.model import ModelBase
 
 from .const import DATETIME_SCHEMA, WSDL
 
@@ -45,7 +45,7 @@ def get_factory() -> Factory:
                 for cls in [
                     getattr(models, class_name) for class_name in models.__all__
                 ]
-                if issubclass(cls, Model)
+                if issubclass(cls, ModelBase)
             },
             datetime: DATETIME_SCHEMA,
         },
@@ -60,7 +60,7 @@ def to_object(data: OrderedDict) -> list[Any]:
     # Trim the leading 'c' and trailing 'List' if applicable.
     class_name: str = name[1:-4] if name.endswith("List") else name[1:]
 
-    cls: Model
+    cls: ModelBase
     if cls := getattr(models, class_name):
         factory: Factory = get_factory()
         instances: list[Any] = factory.load(items, list[cls])
@@ -69,10 +69,10 @@ def to_object(data: OrderedDict) -> list[Any]:
     raise KeyError(f"No model for '{class_name}'")
 
 
-def from_object(instance: Model) -> dict[str, Any]:
+def from_object(instance: ModelBase) -> dict[str, Any]:
     """Serialize model object."""
     factory: Factory = get_factory()
-    cls: Model = instance.__class__
+    cls: ModelBase = instance.__class__
     if cls in factory.schemas:
         serialized = factory.dump(instance, cls)
         _LOGGER.info("%s: %s", cls.__name__, serialized)

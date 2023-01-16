@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 
-from eboekhouden.model import Model
+from eboekhouden.model import ModelBase
 
 NAME_MAPPING: dict[str, str] = {
     "mut_datum": "MutDatum",
@@ -17,7 +17,7 @@ NAME_MAPPING: dict[str, str] = {
 
 
 @dataclass
-class OpenPost(Model):
+class OpenPost(ModelBase):
     """OpenPost."""
 
     mut_datum: datetime | None = None
