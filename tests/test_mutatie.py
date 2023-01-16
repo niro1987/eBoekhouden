@@ -3,6 +3,8 @@
 from datetime import datetime
 import os
 
+import pytest
+
 from eboekhouden import App, BTWCode, InExBTW, Mutatie, MutatieRegel, MutatieSoort
 
 USERNAME: str = os.environ.get("USERNAME")
@@ -12,9 +14,57 @@ SECURITY_CODE_2: str = os.environ.get("SECURITY_CODE_2")
 
 def test_get_mutaties():
     """Test mutaties ophalen."""
+    app: App
     with App(USERNAME, SECURITY_CODE_1, SECURITY_CODE_2) as app:
         data = app.get_mutaties()
         assert isinstance(data, list)
+
+
+def test_get_mutatie_id():
+    """Test mutaties ophalen."""
+    app: App
+    with App(USERNAME, SECURITY_CODE_1, SECURITY_CODE_2) as app:
+        data = app.get_mutaties(mutatienummer=9)
+        assert isinstance(data, list)
+
+
+def test_get_mutatie_van_tot():
+    """Test mutaties ophalen."""
+    app: App
+    with App(USERNAME, SECURITY_CODE_1, SECURITY_CODE_2) as app:
+        data = app.get_mutaties(mutatienummer_van=19, mutatienummer_tot=20)
+        assert isinstance(data, list)
+        assert len(data) == 2
+
+
+def test_get_mutatie_factuurnummer():
+    """Test mutaties ophalen."""
+    app: App
+    with App(USERNAME, SECURITY_CODE_1, SECURITY_CODE_2) as app:
+        data = app.get_mutaties(factuurnummer="F00007")
+        assert isinstance(data, list)
+
+
+def test_get_mutatie_datum_range():
+    """Test mutaties ophalen."""
+    app: App
+    with App(USERNAME, SECURITY_CODE_1, SECURITY_CODE_2) as app:
+        data = app.get_mutaties(
+            start_datum=datetime.today().date(),
+            eind_datum=datetime.today().date(),
+        )
+        assert isinstance(data, list)
+
+
+def test_get_mutatie_datum_range_invalid():
+    """Test mutaties ophalen."""
+    app: App
+    with pytest.raises(ValueError):
+        with App(USERNAME, SECURITY_CODE_1, SECURITY_CODE_2) as app:
+            data = app.get_mutaties(
+                start_datum=datetime.today().date(),
+            )
+            assert isinstance(data, list)
 
 
 def test_add_mutatie_geld_ontvangen():

@@ -258,17 +258,72 @@ class App:
         serialized = serialize_response(response)
         return to_object(serialized) if serialized else []
 
-    def get_mutaties(self) -> list[models.Mutatie]:
+    def get_mutaties(
+        self,
+        *,
+        mutatienummer: int | None = None,
+        mutatienummer_van: int | None = None,
+        mutatienummer_tot: int | None = None,
+        factuurnummer: str | None = None,
+        start_datum: datetime | None = None,
+        eind_datum: datetime | None = None,
+    ) -> list[models.Mutatie]:
         """
         Hiermee kunt u een lijst met mutaties ophalen.
 
         Er zullen nooit meer dan de laatste 500 mutaties opgehaald worden.
         Voor deze functie geldt een maximum van 5.000 calls per maand.
+
+        Parameters
+        ----------
+        mutatienummer : int
+            Zoek op `mutatienummer`.
+        mutatienummer_van : int
+            Zoek op `mutatienummer` bereik.
+        mutatienummer_tot : int
+            Zoek op `mutatienummer` bereik.
+        factuurnummer : str
+            Zoek op `factuurnummer`.
+        start_datum : datetime
+            Zoek op `mutatiedatum`,
+            verplicht in combinatie met `relatiecode` of `eind_datum`.
+        eind_datum : datetime
+            Zoek op `mutatiedatum`,
+            verplicht in combinatie met `relatiecode` of `start_datum`.
+
+        Returns
+        -------
+        list[Mutatie]
+            Lijst van overeenkomende mutaties.
         """
+        if (mutatienummer_van is not None and mutatienummer_tot is not None) and (
+            mutatienummer_van > mutatienummer_tot
+        ):
+            raise ValueError(
+                "Parameter `mutatienummer_van` mag niet groter zijn dan "
+                "`mutatienummer_tot`"
+            )
+        if (start_datum or eind_datum) and not (start_datum and eind_datum):
+            raise ValueError(
+                "Parameter `start_datum` en `eind_datum` moeten altijd in combinatie "
+                "met elkaar gebruikt worden."
+            )
+        filters: dict[str, str] = {
+            "MutatieNr": mutatienummer or 0,
+            "DatumVan": start_datum or datetime(1900, 1, 1),
+            "DatumTm": eind_datum or datetime(2200, 1, 1),
+        }
+        if mutatienummer_van:
+            filters["MutatieNrVan"] = mutatienummer_van
+        if mutatienummer_tot:
+            filters["MutatieNrTm"] = mutatienummer_tot
+        if factuurnummer:
+            filters["Factuurnummer"] = factuurnummer
+        _LOGGER.info(filters)
         response = self.client.service.GetMutaties(
             SessionID=self.session_id,
             SecurityCode2=self.security_code_2,
-            cFilter=[],
+            cFilter=filters if filters else [],
         )
         serialized = serialize_response(response)
         return to_object(serialized) if serialized else []
