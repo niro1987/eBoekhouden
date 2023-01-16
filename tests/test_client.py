@@ -28,6 +28,14 @@ def test_app_without_context_manager():
     assert app.session_id is None
 
 
+def test_invalid_credentials():
+    """Test de reactie indien er ongeldige credentials worden meegegeven."""
+    with pytest.raises(Exception):
+        with App("USERNAME", "SECURITY_CODE_1", "SECURITY_CODE_2") as app:
+            assert app.session_id is None
+        assert app.session_id is None
+
+
 def test_get_administraties():
     """Test het gebruik van de get_administraties functie."""
     with App(USERNAME, SECURITY_CODE_1, SECURITY_CODE_2) as app:

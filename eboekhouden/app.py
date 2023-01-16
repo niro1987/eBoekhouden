@@ -23,8 +23,8 @@ def serialize_response(response):
 
     if error:
         error_message: str = error.pop("LastErrorDescription")
-        _LOGGER.error("LastErrorDescription: %s", error_message)
-        raise ValueError(error_message)
+        _LOGGER.error(error_message)
+        raise Exception(error_message)
 
     _LOGGER.debug("Serialized response: %s", response_data)
     return response_data
@@ -108,12 +108,13 @@ class App:
 
     def open_session(self) -> None:
         """Open een sessie met e-Boekhouden."""
-        session = self.client.service.OpenSession(
+        response = self.client.service.OpenSession(
             Username=self.username,
             SecurityCode1=self.security_code_1,
             SecurityCode2=self.security_code_2,
         )
-        self.session_id = session["SessionID"]
+        serialized = serialize_response(response)
+        self.session_id = serialized
         _LOGGER.info("Sessie gestart: %s", self.session_id)
 
     def close_session(self) -> None:
