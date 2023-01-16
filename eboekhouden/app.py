@@ -23,8 +23,9 @@ def serialize_response(response):
 
     if error:
         error_message: str = error.pop("LastErrorDescription")
-        _LOGGER.error(error_message)
-        raise Exception(error_message)
+        if error_message:
+            _LOGGER.error(error_message)
+            raise Exception(error_message)
 
     _LOGGER.debug("Serialized response: %s", response_data)
     return response_data
