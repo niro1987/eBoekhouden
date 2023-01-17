@@ -11,7 +11,7 @@ from zeep.helpers import serialize_object
 from eboekhouden import models
 from eboekhouden.model import ModelBase
 
-from .const import DATETIME_SCHEMA, WSDL
+from .const import CREDITEUREN, DATETIME_SCHEMA, DEBITEUREN, WSDL
 
 _LOGGER: logging.Logger = logging.getLogger(__name__)
 
@@ -328,7 +328,15 @@ class App:
         serialized = serialize_response(response)
         return to_object(serialized) if serialized else []
 
-    def get_open_posten(self, soort: str) -> list[models.OpenPost]:
+    def get_open_posten_debiteuren(self) -> list[models.OpenPost]:
+        """Lijst met openstaande posten van debiteuren ophalen."""
+        return self._get_open_posten(DEBITEUREN)
+
+    def get_open_posten_crediteuren(self) -> list[models.OpenPost]:
+        """Lijst met openstaande posten van crediteuren ophalen."""
+        return self._get_open_posten(CREDITEUREN)
+
+    def _get_open_posten(self, soort: str) -> list[models.OpenPost]:
         """
         Haalt een lijst op met openstaande posten van de debiteuren óf crediteuren.
 
@@ -337,10 +345,10 @@ class App:
         soort : str
             `Debiteuren` of `Crediteuren`
         """
-        if soort not in ("Debiteuren", "Crediteuren"):
+        if soort not in (DEBITEUREN, CREDITEUREN):
             raise IndexError(
                 f"'{soort}' is niet een geldige optie."
-                "Gebruik 'Debiteuren' of 'Crediteuren'."
+                f"Gebruik '{DEBITEUREN}' of '{CREDITEUREN}'."
             )
         response = self.client.service.GetOpenPosten(
             SessionID=self.session_id,

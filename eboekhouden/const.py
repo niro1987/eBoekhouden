@@ -2,7 +2,8 @@
 from dataclass_factory import Schema
 
 WSDL: str = "https://soap.e-boekhouden.nl/soap.asmx?wsdl"
-
+DEBITEUREN: str = "Debiteuren"
+CREDITEUREN: str = "Crediteuren"
 
 # Custom Schemas
 DATETIME_SCHEMA: Schema = Schema(
