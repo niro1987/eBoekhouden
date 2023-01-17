@@ -126,7 +126,7 @@ class App:
             self.session_id = None
 
     def get_administraties(self) -> list[models.Administratie]:
-        """Een mogelijkheid om de gekoppelde administraties op te halen."""
+        """Gekoppelde administraties ophalen."""
         response = self.client.service.GetAdministraties(
             SessionID=self.session_id,
             SecurityCode2=self.security_code_2,
@@ -144,7 +144,7 @@ class App:
         groep_omschrijving: str | None = None,
     ) -> list[models.Artikel]:
         """
-        Een mogelijkheid om de artikelen van een administratie op te vragen.
+        Lijst met Artikelen ophalen.
 
         Parameters
         ----------
@@ -190,7 +190,7 @@ class App:
         eind_datum: datetime | None = None,
     ) -> list[models.Factuur]:
         """
-        Haalt één of meerdere facturen op.
+        Lijst met facturen ophalen.
 
         Parameters
         ----------
@@ -204,7 +204,7 @@ class App:
             verplicht in combinatie met `relatiecode` of `eind_datum`.
         eind_datum : datetime
             Zoek op `factuurdatum`,
-            verplicht in combinatie met `relatiecode` of `eind_datum`.
+            verplicht in combinatie met `relatiecode` of `start_datum`.
 
         Returns
         -------
@@ -239,7 +239,7 @@ class App:
         return to_object(serialized) if serialized else []
 
     def get_grootboekrekeningen(self) -> list[models.Grootboekrekening]:
-        """Hiermee kunt u een lijst met grootboekrekeningen opvragen."""
+        """Lijst met grootboekrekeningen ophalen."""
         response = self.client.service.GetGrootboekrekeningen(
             SessionID=self.session_id,
             SecurityCode2=self.security_code_2,
@@ -249,7 +249,7 @@ class App:
         return to_object(serialized) if serialized else []
 
     def get_kostenplaatsen(self) -> list[models.Kostenplaats]:
-        """Hiermee kunt u een lijst met kostenplaatsen opvragen."""
+        """Lijst met kostenplaatsen ophalen."""
         response = self.client.service.GetKostenplaatsen(
             SessionID=self.session_id,
             SecurityCode2=self.security_code_2,
@@ -269,7 +269,7 @@ class App:
         eind_datum: datetime | None = None,
     ) -> list[models.Mutatie]:
         """
-        Hiermee kunt u een lijst met mutaties ophalen.
+        Lijst met mutaties ophalen.
 
         Er zullen nooit meer dan de laatste 500 mutaties opgehaald worden.
         Voor deze functie geldt een maximum van 5.000 calls per maand.
@@ -338,7 +338,7 @@ class App:
 
     def _get_open_posten(self, soort: str) -> list[models.OpenPost]:
         """
-        Haalt een lijst op met openstaande posten van de debiteuren óf crediteuren.
+        Lijst met openstaande posten van debiteuren óf crediteuren ophalen.
 
         Parameters
         ----------
@@ -366,7 +366,7 @@ class App:
         code: str | None = None,
     ) -> list[models.Relatie]:
         """
-        Hiermee kunt u een enkele of een lijst relaties ophalen uit het systeem.
+        Lijst met relaties ophalen.
 
         Parameters
         ----------
@@ -397,7 +397,7 @@ class App:
         return to_object(serialized) if serialized else []
 
     def get_saldi(self) -> list[models.Saldo]:
-        """Geeft één of meerdere saldi terug van specifieke grootboekrekeningen."""
+        """Lijst van saldi per grootboekrekening ophalen."""
         response = self.client.service.GetSaldi(
             SessionID=self.session_id,
             SecurityCode2=self.security_code_2,
@@ -408,7 +408,7 @@ class App:
 
     def get_saldo(self, grootboek_code: str, kostenplaats_id: int = 0) -> float:
         """
-        Geeft de saldo terug voor een specifieke grootboekrekening of kostenplaats.
+        Saldo voor een specifieke grootboekrekening of kostenplaats ophalen.
         """
         response = self.client.service.GetSaldo(
             SessionID=self.session_id,
@@ -422,7 +422,7 @@ class App:
         return response["Saldo"]
 
     def add_relatie(self, relatie: models.Relatie) -> int:
-        """Hiermee kunt u een relatie toevoegen aan het systeem."""
+        """Nieuwe relatie toevoegen."""
         serialized_object = from_object(relatie)
         response = self.client.service.AddRelatie(
             SessionID=self.session_id,
@@ -434,7 +434,7 @@ class App:
         return serialized
 
     def add_mutatie(self, relatie: models.Mutatie) -> int:
-        """Hiermee kunt u een mutatie toevoegen aan het systeem."""
+        """Nieuwe mutatie toevoegen."""
         serialized_object = from_object(relatie)
         response = self.client.service.AddMutatie(
             SessionID=self.session_id,
@@ -447,7 +447,7 @@ class App:
 
     def add_factuur(self, factuur: models.Factuur) -> str:
         """
-        Hiermee voert u een nieuwe factuur in.
+        Nieuwe factuur toevoegen.
 
         Let op! Wilt u bestellingen/facturen vanuit een ander facturatiesysteem
         plaatsen, gebruik dan `add_mutatie()`.
