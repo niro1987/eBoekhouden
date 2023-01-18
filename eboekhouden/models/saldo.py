@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 
 from eboekhouden.model import ModelBase
+from eboekhouden.types import GrootboekCategorie
 
 NAME_MAPPING: dict[str, str] = {
     "id": "ID",
@@ -18,7 +19,7 @@ class Saldo(ModelBase):
 
     id: int | None = None  # pylint: disable=invalid-name
     code: str | None = None
-    categorie: str | None = None
+    categorie: GrootboekCategorie | None = None
     saldo: float | None = None
 
     @staticmethod
