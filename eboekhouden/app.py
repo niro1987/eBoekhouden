@@ -433,9 +433,9 @@ class App:
         _LOGGER.info("ID: %s", serialized)
         return serialized
 
-    def add_mutatie(self, relatie: models.Mutatie) -> int:
+    def add_mutatie(self, mutatie: models.Mutatie) -> int:
         """Hiermee kunt u een mutatie toevoegen aan het systeem."""
-        serialized_object = from_object(relatie)
+        serialized_object = from_object(mutatie)
         response = self.client.service.AddMutatie(
             SessionID=self.session_id,
             SecurityCode2=self.security_code_2,
