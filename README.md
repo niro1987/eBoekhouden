@@ -15,7 +15,7 @@ gebasseerd op de openbare [API documentatie][api_doc].
     - [get\_grootboekrekeningen()](#get_grootboekrekeningen)
     - [get\_kostenplaatsen()](#get_kostenplaatsen)
     - [get\_mutaties()](#get_mutaties)
-    - [get\_open\_posten()](#get_open_posten)
+    - [get\_open\_posten\_debiteuren() en get\_open\_posten\_crediteuren()](#get_open_posten_debiteuren-en-get_open_posten_crediteuren)
     - [get\_relaties()](#get_relaties)
     - [get\_saldi()](#get_saldi)
     - [get\_saldo()](#get_saldo)
@@ -29,6 +29,10 @@ gebasseerd op de openbare [API documentatie][api_doc].
     - [Factuur](#factuur)
     - [Grootboekrekening](#grootboekrekening)
     - [Kostenplaats](#kostenplaats)
+    - [Mutatie](#mutatie)
+    - [Open Post](#open-post)
+    - [Relatie](#relatie)
+    - [Saldo](#saldo)
 
 ***
 
@@ -190,7 +194,7 @@ with App("Gebruikersnaam", "Beveiligingscode 1", "Beveiligingscode 2") as app:
 ### get\_mutaties()
 
 Lijst met mutaties ophalen. Gebruik een of meerdere van onderstaande parameters om het
-resultaat te filteren. Geeft een `list` van één of meer [Facturen](#factuur).
+resultaat te filteren. Geeft een `list` van één of meer [Mutaties](#mutatie).
 
 Er zullen nooit meer dan de laatste 500 mutaties opgehaald worden. Voor deze functie
 geldt een maximum van 5.000 calls per maand.
@@ -222,54 +226,167 @@ with App("Gebruikersnaam", "Beveiligingscode 1", "Beveiligingscode 2") as app:
     )
 ```
 
-### get\_open\_posten()
+### get\_open\_posten\_debiteuren() en get\_open\_posten\_crediteuren()
 
-Lijst met openstaande posten bij debiteuren óf crediteuren ophalen.
+Lijst met openstaande posten van debiteuren en crediteuren ophalen. Geeft een `list` van
+geen of meer [Open Posten](#open-post).
 
 ```py
-from eboekhouden import App, Administratie
+from eboekhouden import App, OpenPost
 
 with App("Gebruikersnaam", "Beveiligingscode 1", "Beveiligingscode 2") as app:
-    administraties: list[Administratie] = app.get_administraties()
+    debiteuren: list[OpenPost] = app.get_open_posten_debiteuren()
+    crediteuren: list[OpenPost] = app.get_open_posten_crediteuren()
 ```
 
 ### get\_relaties()
 
-Lijst met relaties ophalen.
+Lijst met relaties ophalen. Gebruik een of meerdere van onderstaande parameters om het
+resultaat te filteren. Geeft een `list` van één of meer [Relaties](#relatie).
+
+| Parameter  | Type  |                                    Beschrijving                                    |
+| ---------- | ----- | ---------------------------------------------------------------------------------- |
+| relatie_id | `int` | Filter relaties op basis van uniek identificatie nummer.                           |
+| trefwoord  | `str` | Zoek relaties op basis code, bedrijfsnaam, plaats, contactpersoon, email en soort. |
+| code       | `str` | Filter relaties op basis van code.                                                 |
 
 ```py
-from eboekhouden import App, Administratie
+from eboekhouden import App, Relatie
 
 with App("Gebruikersnaam", "Beveiligingscode 1", "Beveiligingscode 2") as app:
-    administraties: list[Administratie] = app.get_administraties()
+    # Alle relaties
+    relaties: list[Relatie] = app.get_relaties()
+
+    # Relaties met een emailadres bij `@example.com`
+    relaties: list[Relatie] = app.get_relaties(trefwoord='@example.com')
+
+    # Relatie met code 'SPAM'
+    relatie: Relatie = app.get_relaties(code='SPAM')[0]
 ```
 
 ### get\_saldi()
 
-Lijst van saldi per grootboekrekening ophalen.
+Lijst van saldi per grootboekrekening ophalen. Geeft een `list` van [Saldo](#saldo) per
+grootboekrekening.
 
 ```py
-from eboekhouden import App, Administratie
+from eboekhouden import App, Saldo
 
 with App("Gebruikersnaam", "Beveiligingscode 1", "Beveiligingscode 2") as app:
-    administraties: list[Administratie] = app.get_administraties()
+    saldi: list[Saldo] = app.get_saldi()
 ```
 
 ### get\_saldo()
 
-Saldo voor een specifieke grootboekrekening of kostenplaats ophalen.
+Saldo voor een specifieke grootboekrekening of kostenplaats ophalen. Geeft het saldo
+van de gespecificeerde grootboekrekening als een `float`.
+
+|    Parameter    | Type  |                        Beschrijving                        |
+| --------------- | ----- | ---------------------------------------------------------- |
+| grootboek_code  | `str` | Grootboek code.                                            |
+| kostenplaats_id | `int` | Optioneel. Uniek identificatie nummer van de kostenplaats. |
 
 ### add\_relatie()
 
-Nieuwe relatie toevoegen.
+Nieuwe relatie toevoegen. Geeft het uniek identificatie nummer van de aangemaakt
+[Relatie](#relatie). Geeft een `Exception` foutmelding als de relatie niet kan worden
+aangemaakt.
+
+| Parameter |   Type    |          Beschrijving           |
+| --------- | --------- | ------------------------------- |
+| relatie   | `Relatie` | Relatie object om aan te maken. |
+
+```py
+from eboekhouden import App, Relatie, RelatieType
+
+new_relatie: Relatie = Relatie(
+    bedrijf="SPAM",
+    code="EGGS",
+    relatie_type=RelatieType.BEDRIJF,
+)
+
+with App("Gebruikersnaam", "Beveiligingscode 1", "Beveiligingscode 2") as app:
+    new_relatie_id: int = app.add_relatie(new_relatie)
+```
 
 ### add\_mutatie()
 
-Nieuwe mutatie toevoegen.
+Nieuwe mutatie toevoegen. Geeft het uniek identificatie nummer van de aangemaakt
+[Mutatie](#mutatie). Geeft een `Exception` foutmelding als de mutatie niet kan worden
+aangemaakt.
+
+| Parameter |   Type    |          Beschrijving           |
+| --------- | --------- | ------------------------------- |
+| mutatie   | `Mutatie` | Mutatie object om aan te maken. |
+
+```py
+from eboekhouden import App, Mutatie, MutatieSoort, MutatieRegel, BTWCode
+from datetime import datetime
+
+new_mutatie: Mutatie = Mutatie(
+    soort=MutatieSoort.GELD_ONTVANGEN,
+    datum=datetime.today(),
+    rekening="1000",  # Kas
+    omschrijving="SPAM_EGGS",
+    in_ex_btw=InExBTW.EX,
+    mutaties=[
+        MutatieRegel(
+            bedrag_invoer=1,
+            bedrag_excl_btw=1,
+            bedrag_btw=0.21,
+            bedrag_incl_btw=1.21,
+            btw_percentage=21,
+            btw_code=BTWCode.HOOG_VERK_21,
+            tegenrekening_code="1400",  # Eigen vermogen
+        ),
+    ],
+)
+
+with App("Gebruikersnaam", "Beveiligingscode 1", "Beveiligingscode 2") as app:
+    new_mutatie_id: int = app.add_mutatie(new_mutatie)
+```
 
 ### add\_factuur()
 
-Nieuwe factuur toevoegen.
+Nieuwe factuur toevoegen. Geeft het uniek identificatie nummer van de aangemaakt
+[Factuur](#factuur). Geeft een `Exception` foutmelding als de factuur niet kan worden
+aangemaakt.
+
+| Parameter |   Type    |          Beschrijving           |
+| --------- | --------- | ------------------------------- |
+| factuur   | `Factuur` | Factuur object om aan te maken. |
+
+```py
+from eboekhouden import App, Factuur, FactuurRegel, BTWCode, Eenheid
+from datetime import datetime
+
+new_factuur: Factuur = Factuur(
+    relatiecode="SPAM",
+    datum=datetime.today(),
+    betalingstermijn="14",
+    per_email_verzenden=True,
+    email_onderwerp="Factuur",
+    email_van_adres="email@example.com",
+    email_bericht="Eggs",
+    automatische_incasso=False,
+    in_boekhouding_plaatsen=True,
+    boekhoudmutatie_omschrijving="Bacon",
+    regels=[
+        FactuurRegel(
+            code="SAUSAGE",
+            omschrijving="Sausage",
+            aantal=1,
+            eenheid=Eenheid.STUK,
+            prijs_per_eenheid=2,
+            btw_code=BTWCode.HOOG_VERK_21,
+            tegenrekening_code="0130",  # Inventarissen
+        ),
+    ],
+)
+
+with App(USERNAME, SECURITY_CODE_1, SECURITY_CODE_2) as app:
+    new_factuur_id: int = app.add_factuur(new_factuur)
+```
 
 ### open\_session() en close\_session()
 
@@ -335,6 +452,22 @@ with App("Gebruikersnaam", "Beveiligingscode 1", "Beveiligingscode 2") as app:
 ...
 
 ### Kostenplaats
+
+...
+
+### Mutatie
+
+...
+
+### Open Post
+
+...
+
+### Relatie
+
+...
+
+### Saldo
 
 ...
 
