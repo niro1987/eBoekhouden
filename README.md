@@ -38,6 +38,7 @@ gebasseerd op de openbare [API documentatie][api_doc].
   - [Types](#types)
     - [BTW Code](#btw-code)
     - [Eenheid](#eenheid)
+    - [Geslacht](#geslacht)
     - [Grootboek Categorie](#grootboek-categorie)
     - [In Ex BTW](#in-ex-btw)
     - [Incasso Machtiging Soort](#incasso-machtiging-soort)
@@ -594,7 +595,7 @@ Het `Relatie` object modelleert een relatie.
 | add_datum                | `datetime`                   | Datum toegevoegd.                    |
 | bedrijf                  | `str`                        | Naam.                                |
 | contactpersoon           | `str`                        | Naam van contactpersoon bij bedrijf. |
-| geslacht                 | `str`                        | Man / Vrouw / Afdeling               |
+| geslacht                 | [Geslacht](#geslacht)        | Man / Vrouw / Afdeling               |
 | adres                    | `str`                        | Adres.                               |
 | postcode                 | `str`                        | Postcode van het vestigingsadres.    |
 | plaats                   | `str`                        | Plaats van het vestigingsadres.      |
@@ -683,6 +684,15 @@ Het `Saldo` object modelleert een regel op een [Mutatie](#mutatie).
 | STUK      | Per stuk     |
 | DOOS      | Per doos     |
 | UUR       | Per uur      |
+
+### Geslacht
+
+| Constante | Beschrijving |
+| --------- | ------------ |
+| MAN       | Man          |
+| VROUW     | Vrouw        |
+| AFDELING  | Afdeling     |
+| ONBEKEND  | Onbekend     |
 
 ### Grootboek Categorie
 

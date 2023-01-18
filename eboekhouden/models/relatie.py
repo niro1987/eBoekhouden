@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from datetime import datetime
 
 from eboekhouden.model import ModelBase
-from eboekhouden.types import RelatieType
+from eboekhouden.types import Geslacht, RelatieType
 
 NAME_MAPPING: dict[str, str] = {
     "relatie_id": "ID",
@@ -62,7 +62,7 @@ class Relatie(ModelBase):  # pylint: disable=too-many-instance-attributes
     add_datum: datetime | None = None
     bedrijf: str | None = None
     contactpersoon: str | None = None
-    geslacht: str | None = None
+    geslacht: Geslacht | None = None
     adres: str | None = None
     postcode: str | None = None
     plaats: str | None = None
