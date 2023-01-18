@@ -286,6 +286,14 @@ van de gespecificeerde grootboekrekening als een `float`.
 | grootboek_code  | `str` | Grootboek code.                                            |
 | kostenplaats_id | `int` | Optioneel. Uniek identificatie nummer van de kostenplaats. |
 
+```py
+from eboekhouden import App
+
+with App("Gebruikersnaam", "Beveiligingscode 1", "Beveiligingscode 2") as app:
+    kas: float = app.get_saldo("1000")  # Kas
+    bank: float = app.get_saldo("1010")  # Bank
+```
+
 ### add\_factuur()
 
 Nieuwe factuur toevoegen. Geeft het uniek identificatie nummer van de aangemaakt
