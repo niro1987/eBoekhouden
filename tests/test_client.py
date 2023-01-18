@@ -67,22 +67,15 @@ def test_get_kostenplaatsen():
 def test_get_open_posten_deb():
     """Test het gebruik van de get_open_posten functie."""
     with App(USERNAME, SECURITY_CODE_1, SECURITY_CODE_2) as app:
-        data = app.get_open_posten("Debiteuren")
+        data = app.get_open_posten_debiteuren()
         assert isinstance(data, list)
 
 
 def test_get_open_posten_cred():
     """Test het gebruik van de get_open_posten functie."""
     with App(USERNAME, SECURITY_CODE_1, SECURITY_CODE_2) as app:
-        data = app.get_open_posten("Debiteuren")
+        data = app.get_open_posten_crediteuren()
         assert isinstance(data, list)
-
-
-def test_get_open_posten_error():
-    """Test het gebruik van de get_open_posten functie."""
-    with App(USERNAME, SECURITY_CODE_1, SECURITY_CODE_2) as app:
-        with pytest.raises(IndexError):
-            app.get_open_posten("test")
 
 
 def test_get_saldi():
