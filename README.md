@@ -27,12 +27,21 @@ gebasseerd op de openbare [API documentatie][api_doc].
     - [Administratie](#administratie)
     - [Artikel](#artikel)
     - [Factuur](#factuur)
+    - [Factuur Regel](#factuur-regel)
     - [Grootboekrekening](#grootboekrekening)
     - [Kostenplaats](#kostenplaats)
     - [Mutatie](#mutatie)
+    - [Mutatie Regel](#mutatie-regel)
     - [Open Post](#open-post)
     - [Relatie](#relatie)
     - [Saldo](#saldo)
+  - [ENUM](#enum)
+    - [BTW Code](#btw-code)
+    - [Eenheid](#eenheid)
+    - [In Ex BTW](#in-ex-btw)
+    - [Incasso Machtiging Soort](#incasso-machtiging-soort)
+    - [Mutatie Soort](#mutatie-soort)
+    - [Relatie Type](#relatie-type)
 
 ***
 
@@ -76,8 +85,8 @@ with App("Gebruikersnaam", "Beveiligingscode 1", "Beveiligingscode 2") as app:
 
 ## App
 
-Het `App` object gebruik je om een connectie te maken met jouw eBoekhouden omgeving. Je
-kunt het gebruiken als context manager, maar het is niet verplicht.
+Het `App` object gebruik je om een connectie te maken met jouw eBoekhouden omgeving. Je kunt het
+gebruiken als context manager, maar het is niet verplicht.
 
 ```py
 from eboekhouden import App
@@ -109,8 +118,8 @@ with App("Gebruikersnaam", "Beveiligingscode 1", "Beveiligingscode 2") as app:
 
 ### get\_artikelen()
 
-Lijst met Artikelen ophalen. Gebruik een of meerdere van onderstaande parameters om het
-resultaat te filteren. Geeft een `list` van één of meer [Artikelen](#artikel).
+Lijst met Artikelen ophalen. Gebruik een of meerdere van onderstaande parameters om het resultaat te
+filteren. Geeft een `list` van één of meer [Artikelen](#artikel).
 
 |      Parameter       | Type  |                        Beschrijving                         |
 | -------------------- | ----- | ----------------------------------------------------------- |
@@ -139,8 +148,8 @@ with App("Gebruikersnaam", "Beveiligingscode 1", "Beveiligingscode 2") as app:
 
 ### get\_facturen()
 
-Lijst met facturen ophalen. Gebruik een of meerdere van onderstaande parameters om het
-resultaat te filteren. Geeft een `list` van één of meer [Facturen](#factuur).
+Lijst met facturen ophalen. Gebruik een of meerdere van onderstaande parameters om het resultaat te
+filteren. Geeft een `list` van één of meer [Facturen](#factuur).
 
 |   Parameter   |    Type    |                                                 Beschrijving                                                  |
 | ------------- | ---------- | ------------------------------------------------------------------------------------------------------------- |
@@ -181,8 +190,7 @@ with App("Gebruikersnaam", "Beveiligingscode 1", "Beveiligingscode 2") as app:
 
 ### get\_kostenplaatsen()
 
-Lijst met kostenplaatsen ophalen. Geeft een `list` van één of meer
-[Kostenplaatsen](#kostenplaats).
+Lijst met kostenplaatsen ophalen. Geeft een `list` van één of meer [Kostenplaatsen](#kostenplaats).
 
 ```py
 from eboekhouden import App, Kostenplaats
@@ -193,11 +201,11 @@ with App("Gebruikersnaam", "Beveiligingscode 1", "Beveiligingscode 2") as app:
 
 ### get\_mutaties()
 
-Lijst met mutaties ophalen. Gebruik een of meerdere van onderstaande parameters om het
-resultaat te filteren. Geeft een `list` van één of meer [Mutaties](#mutatie).
+Lijst met mutaties ophalen. Gebruik een of meerdere van onderstaande parameters om het resultaat te
+filteren. Geeft een `list` van één of meer [Mutaties](#mutatie).
 
-Er zullen nooit meer dan de laatste 500 mutaties opgehaald worden. Voor deze functie
-geldt een maximum van 5.000 calls per maand.
+Er zullen nooit meer dan de laatste 500 mutaties opgehaald worden. Voor deze functie geldt een
+maximum van 5.000 calls per maand.
 
 |     Parameter     |    Type    |                                       Beschrijving                                       |
 | ----------------- | ---------- | ---------------------------------------------------------------------------------------- |
@@ -228,8 +236,8 @@ with App("Gebruikersnaam", "Beveiligingscode 1", "Beveiligingscode 2") as app:
 
 ### get\_open\_posten\_debiteuren() en get\_open\_posten\_crediteuren()
 
-Lijst met openstaande posten van debiteuren en crediteuren ophalen. Geeft een `list` van
-geen of meer [Open Posten](#open-post).
+Lijst met openstaande posten van debiteuren en crediteuren ophalen. Geeft een `list` van geen of
+meer [Open Posten](#open-post).
 
 ```py
 from eboekhouden import App, OpenPost
@@ -241,8 +249,8 @@ with App("Gebruikersnaam", "Beveiligingscode 1", "Beveiligingscode 2") as app:
 
 ### get\_relaties()
 
-Lijst met relaties ophalen. Gebruik een of meerdere van onderstaande parameters om het
-resultaat te filteren. Geeft een `list` van één of meer [Relaties](#relatie).
+Lijst met relaties ophalen. Gebruik een of meerdere van onderstaande parameters om het resultaat te
+filteren. Geeft een `list` van één of meer [Relaties](#relatie).
 
 | Parameter  | Type  |                                    Beschrijving                                    |
 | ---------- | ----- | ---------------------------------------------------------------------------------- |
@@ -278,8 +286,8 @@ with App("Gebruikersnaam", "Beveiligingscode 1", "Beveiligingscode 2") as app:
 
 ### get\_saldo()
 
-Saldo voor een specifieke grootboekrekening of kostenplaats ophalen. Geeft het saldo
-van de gespecificeerde grootboekrekening als een `float`.
+Saldo voor een specifieke grootboekrekening of kostenplaats ophalen. Geeft het saldo van de
+gespecificeerde grootboekrekening als een `float`.
 
 |    Parameter    | Type  |                        Beschrijving                        |
 | --------------- | ----- | ---------------------------------------------------------- |
@@ -297,12 +305,11 @@ with App("Gebruikersnaam", "Beveiligingscode 1", "Beveiligingscode 2") as app:
 ### add\_factuur()
 
 Nieuwe factuur toevoegen. Geeft het uniek identificatie nummer van de aangemaakt
-[Factuur](#factuur). Geeft een `Exception` foutmelding als de factuur niet kan worden
-aangemaakt.
+[Factuur](#factuur). Geeft een `Exception` foutmelding als de factuur niet kan worden aangemaakt.
 
-| Parameter |   Type    |          Beschrijving           |
-| --------- | --------- | ------------------------------- |
-| factuur   | `Factuur` | Factuur object om aan te maken. |
+| Parameter |        Type         |          Beschrijving           |
+| --------- | ------------------- | ------------------------------- |
+| factuur   | [Factuur](#factuur) | Factuur object om aan te maken. |
 
 ```py
 from eboekhouden import App, Factuur, FactuurRegel, BTWCode, Eenheid
@@ -339,12 +346,11 @@ with App(USERNAME, SECURITY_CODE_1, SECURITY_CODE_2) as app:
 ### add\_mutatie()
 
 Nieuwe mutatie toevoegen. Geeft het uniek identificatie nummer van de aangemaakt
-[Mutatie](#mutatie). Geeft een `Exception` foutmelding als de mutatie niet kan worden
-aangemaakt.
+[Mutatie](#mutatie). Geeft een `Exception` foutmelding als de mutatie niet kan worden aangemaakt.
 
-| Parameter |   Type    |          Beschrijving           |
-| --------- | --------- | ------------------------------- |
-| mutatie   | `Mutatie` | Mutatie object om aan te maken. |
+| Parameter |        Type         |          Beschrijving           |
+| --------- | ------------------- | ------------------------------- |
+| mutatie   | [Mutatie](#mutatie) | Mutatie object om aan te maken. |
 
 ```py
 from eboekhouden import App, Mutatie, MutatieSoort, MutatieRegel, BTWCode
@@ -375,13 +381,12 @@ with App("Gebruikersnaam", "Beveiligingscode 1", "Beveiligingscode 2") as app:
 
 ### add\_relatie()
 
-Nieuwe relatie toevoegen. Geeft het uniek identificatie nummer van de aangemaakt
-[Relatie](#relatie). Geeft een `Exception` foutmelding als de relatie niet kan worden
-aangemaakt.
+Nieuwe relatie toevoegen. Geeft het unieke identificatie nummer van de aangemaakt
+[Relatie](#relatie). Geeft een `Exception` foutmelding als de relatie niet kan worden aangemaakt.
 
-| Parameter |   Type    |          Beschrijving           |
-| --------- | --------- | ------------------------------- |
-| relatie   | `Relatie` | Relatie object om aan te maken. |
+| Parameter |        Type         |          Beschrijving           |
+| --------- | ------------------- | ------------------------------- |
+| relatie   | [Relatie](#relatie) | Relatie object om aan te maken. |
 
 ```py
 from eboekhouden import App, Relatie, RelatieType
@@ -398,10 +403,10 @@ with App("Gebruikersnaam", "Beveiligingscode 1", "Beveiligingscode 2") as app:
 
 ### open\_session() en close\_session()
 
-Open een sessie met e-Boekhouden. Wanneer `App` niet al context manager wordt gebruikt,
-moet eerst een sessie met e-Boekhouden worden gestart met `open_session()`. Zonder een
-sessie kan geen data worden opgehaald of verwerkt in e-Boekhouden. Na gebruik moet de
-sessie worden gesloten met `close_session()`.
+Open een sessie met e-Boekhouden. Wanneer `App` niet al context manager wordt gebruikt, moet eerst
+een sessie met e-Boekhouden worden gestart met `open_session()`. Zonder een sessie kan geen data
+worden opgehaald of verwerkt in e-Boekhouden. Na gebruik moet de sessie worden gesloten met
+`close_session()`.
 
 ```py
 from eboekhouden import App
@@ -425,57 +430,243 @@ with App("Gebruikersnaam", "Beveiligingscode 1", "Beveiligingscode 2") as app:
 
 ### Administratie
 
-Het `Administratie` object representeert een gekoppelde administratie. In
-e-Boekhouden vindt u deze via
-**Beheer > Instellingen > Overige > Gekoppelde administraties**
+Het `Administratie` object modelleert een gekoppelde administratie.
+In e-Boekhouden vindt u deze via **Beheer > Instellingen > Overige**
 
-Het `Administratie` object bevat de volgende attributen.
-
-- `bedrijf`: Naam van het bedrijf.
-- `plaats`: Plaatsnaam van het bedrijf.
-- `guid`:  Unieke systeem identificatie van de gekoppelde administratie.
-- `start_boekjaar`: Datum van beging van het boekjaar van gekoppelde administratie.
-Alleen van toepassing indien sprake is van een gebroken boekjaar.
-
-`get_administraties()`
-
-Gekoppelde administraties ophalen. Deze methode vraagt geen parameters en geeft een
-`list` van `Administratie` objecten.
-
-```py
-with App("Gebruikersnaam", "Beveiligingscode 1", "Beveiligingscode 2") as app:
-    administraties = app.get_administraties()
-```
+|   Attribuut    |    Type    |                                Beschrijving                                 |
+| -------------- | ---------- | --------------------------------------------------------------------------- |
+| bedrijf        | `str`      | Naam van het bedrijf.                                                       |
+| plaats         | `str`      | Plaatsnaam.                                                                 |
+| guid           | `str`      | Unieke systeem identificatie van de gekoppelde administratie.               |
+| start_boekjaar | `datetime` | Begin van het boekjaara, alleen indien sprake is van een gebroken boekjaar. |
 
 ### Artikel
 
-...
+Het `Artikel` object modelleert een product of dienst.
+
+|       Attribuut       |  Type   |                  Beschrijving                   |
+| --------------------- | ------- | ----------------------------------------------- |
+| artikel_id            | `int`   | Unieke identificatie nummer van het artikel.    |
+| artikel_omschrijving  | `str`   | Omschrijving.                                   |
+| artikel_code          | `str`   | Artikel code.                                   |
+| groep_omschrijving    | `str`   | Artikelgroep omschrijving.                      |
+| groep_code            | `str`   | Artikelgroep code.                              |
+| eenheid               | `str`   | Eenheid, enkelvoud benaming.                    |
+| inkoopprijs_excl_btw  | `float` | Inkoopprijs Excl. BTW.                          |
+| verkoopprijs_excl_btw | `float` | Verkoopprijs Excl. BTW.                         |
+| verkoopprijs_incl_btw | `float` | Verkoopprijs Incl. BTW.                         |
+| btw_code              | `str`   | BTW Code.                                       |
+| tegenrekening_code    | `str`   | Grootboekrekening code.                         |
+| btw_percentage        | `float` | BTW percentage.                                 |
+| kostenplaats_id       | `int`   | Uniek identificatie nummer van de kostenplaats. |
+| actief                | `bool`  | Geeft aan of het artikel actief is.             |
 
 ### Factuur
 
-...
+Het `Factuur` object modelleert een factuur.
+
+|               Attribuut                |                        Type                         |        Beschrijving         |
+| -------------------------------------- | --------------------------------------------------- | --------------------------- |
+| relatiecode                            | `str`                                               | Relatie code.               |
+| datum                                  | `datetime`                                          | Factuurdatum.               |
+| regels                                 | `list`\[[FactuurRegel](#factuur-regel)\]            | Factuur regels.             |
+| factuursjabloon                        | `str`                                               | Sjabloon.                   |
+| factuurnummer                          | `str`                                               | Factuurnummer.              |
+| betalingstermijn                       | `int`                                               | Betalingstermijn in dagen.  |
+| per_email_verzenden                    | `bool`                                              | Per email verzenden.        |
+| email_onderwerp                        | `str`                                               | Onderwerp.                  |
+| email_bericht                          | `str`                                               | Bericht.                    |
+| email_van_adres                        | `str`                                               | Van emailadres.             |
+| email_van_naam                         | `str`                                               | Van naam.                   |
+| automatische_incasso                   | `bool`                                              | Automatische incasso.       |
+| incasso_iban                           | `str`                                               | IBAN.                       |
+| incasso_machtiging_soort               | [IncassoMachtigingSoort](#incasso-machtiging-soort) | Machtigingsoort.            |
+| incasso_machtiging_id                  | `str`                                               | Machtiging ID.              |
+| incasso_machtiging_datum_ondertekening | `datetime`                                          | Datum ondertekenen.         |
+| incasso_machtiging_first               | `bool`                                              | Wel of niet eerste incasso. |
+| incasso_rekening_nummer                | `str`                                               | Rekeningnummer.             |
+| incasso_tnv                            | `str`                                               | Ten naame van.              |
+| incasso_plaats                         | `str`                                               | Plaats.                     |
+| incasso_omschrijving_regel1            | `str`                                               | Regel 1.                    |
+| incasso_omschrijving_regel2            | `str`                                               | Regel 2.                    |
+| incasso_omschrijving_regel3            | `str`                                               | Regel 3.                    |
+| in_boekhouding_plaatsen                | `bool`                                              | In boekhouding plaatsen.    |
+| boekhoudmutatie_omschrijving           | `str`                                               | Mutatie omschrijving.       |
+
+### Factuur Regel
+
+Het `FactuurRegel` object modelleert een regel op een [Factuur](#factuur).
+
+|     Attribuut      |         Type         |                  Beschrijving                   |
+| ------------------ | -------------------- | ----------------------------------------------- |
+| aantal             | `float`              | Aantal.                                         |
+| eenheid            | [Eenheid](#eenheid)  | Eenheid.                                        |
+| code               | `str`                | Artikel code.                                   |
+| omschrijving       | `str`                | Omschrijving.                                   |
+| prijs_per_eenheid  | `float`              | Prijs per eenheid.                              |
+| btw_code           | [BTWCode](#btw-code) | BTW code.                                       |
+| tegenrekening_code | `str`                | Grootboekrekening code.                         |
+| kostenplaats_id    | `int`                | Uniek identificatie nummer van de kostenplaats. |
 
 ### Grootboekrekening
 
-...
+Het `Grootboekrekening` object modelleert een grootboekrekening.
+
+|  Attribuut   | Type  |        Beschrijving         |
+| ------------ | ----- | --------------------------- |
+| id           | `int` | Uniek identificatie nummer. |
+| code         | `str` | Code.                       |
+| omschrijving | `str` | Omschrijving.               |
+| categorie    | `str` | Categorie.                  |
+| groep        | `str` | Groep.                      |
 
 ### Kostenplaats
 
-...
+Het `Kostenplaats` object modelleert een kostenplaats. In e-Boekhouden vindt u deze via
+**Beheer > Instellingen > Functies aan/uit zetten**
+
+|       Attribuut        | Type  |                        Beschrijving                        |
+| ---------------------- | ----- | ---------------------------------------------------------- |
+| kostenplaats_id        | `int` | Uniek identificatie nummer.                                |
+| omschrijving           | `str` | Omschrijving.                                              |
+| kostenplaats_parent_id | `int` | Uniek identificatie nummer van bovenliggende kostenplaats. |
 
 ### Mutatie
 
-...
+Het `Mutatie` object modelleert een boukhoudmutatie.
+
+|    Attribuut     |                   Type                   |         Beschrijving          |
+| ---------------- | ---------------------------------------- | ----------------------------- |
+| soort            | [MutatieSoort](#mutatie-soort)           | Soort mutatie.                |
+| datum            | `datetime`                               | Mutatie datum.                |
+| rekening         | `str`                                    | Grootboekrekening code.       |
+| mutaties         | `list`\[[MutatieRegel](#mutatie-regel)\] | Mutatie regels.               |
+| relatie_code     | `str`                                    | Relatie code.                 |
+| factuurnummer    | `str`                                    | Factuurnummer.                |
+| betalingstermijn | `str`                                    | Betalingstermijn in dagen.    |
+| mutatie_nr       | `int`                                    | Uniek identificatie nummer.   |
+| boekstuk         | `str`                                    | Boekstuk.                     |
+| omschrijving     | `str`                                    | Omschrijving.                 |
+| betalingskenmerk | `str`                                    | Betalingskenmerk.             |
+| in_ex_btw        | [InExBTW](#in-ex-btw)                    | Invoer is Incl. of Excl. BTW. |
+
+### Mutatie Regel
+
+Het `MutatieRegel` object modelleert een regel op een [Mutatie](#mutatie).
+
+|     Attribuut      |         Type         |                  Beschrijving                   |
+| ------------------ | -------------------- | ----------------------------------------------- |
+| bedrag_invoer      | `float`              | Bedrag.                                         |
+| bedrag_excl_btw    | `float`              | Bedrag Excl. BTW.                               |
+| bedrag_btw         | `float`              | BTW bedrag.                                     |
+| bedrag_incl_btw    | `float`              | Bedrag Incl. BTW.                               |
+| btw_percentage     | `float`              | BTW percentage.                                 |
+| btw_code           | [BTWCode](#btw-code) | BTW code.                                       |
+| tegenrekening_code | `str`                | Grootboekrekening code.                         |
+| kostenplaats_id    | `int`                | Uniek identificatie nummer van de kostenplaats. |
 
 ### Open Post
+
+Het `OpenPost` object modelleert een regel op een [Mutatie](#mutatie).
+
+|  Attribuut  |    Type    |      Beschrijving      |
+| ----------- | ---------- | ---------------------- |
+| mut_datum   | `datetime` | Mutatie datum.         |
+| mut_factuur | `str`      | Factuurnummer.         |
+| rel_code    | `str`      | Relatie code.          |
+| rel_bedrijf | `str`      | Naam van de relatie.   |
+| bedrag      | `float`    | Factuurbedrag.         |
+| voldaan     | `float`    | Bedrag dat is voldaan. |
+| openstaand  | `float`    | Openstaand bedrag.     |
 
 ...
 
 ### Relatie
 
-...
+Het `Relatie` object modelleert een relatie.
+
+|        Attribuut         |             Type             |             Beschrijving             |
+| ------------------------ | ---------------------------- | ------------------------------------ |
+| relatie_type             | [RelatieType](#relatie-type) | Bedrijf / Particulier.               |
+| code                     | `str`                        | Relatiecode.                         |
+| relatie_id               | `int`                        | Uniek identificatie nummer.          |
+| add_datum                | `datetime`                   | Datum toegevoegd.                    |
+| bedrijf                  | `str`                        | Naam.                                |
+| contactpersoon           | `str`                        | Naam van contactpersoon bij bedrijf. |
+| geslacht                 | `str`                        | Man / Vrouw / Afdeling               |
+| adres                    | `str`                        | Adres.                               |
+| postcode                 | `str`                        | Postcode van het vestigingsadres.    |
+| plaats                   | `str`                        | Plaats van het vestigingsadres.      |
+| land                     | `str`                        | Land van het vestigingsadres.        |
+| adres_factuur            | `str`                        | Postadres.                           |
+| postcode_factuur         | `str`                        | Postcode van het postadres.          |
+| plaats_factuur           | `str`                        | Plaats van het postadres.            |
+| land_factuur             | `str`                        | Land van het postadres.              |
+| telefoon                 | `str`                        | Telefoonnummer.                      |
+| mobiel                   | `str`                        | Mobiel telefoonnummer.               |
+| fax                      | `str`                        | Faxnummer.                           |
+| email                    | `str`                        | E-mailadres.                         |
+| site                     | `str`                        | Website.                             |
+| notitie                  | `str`                        | Notitieveld.                         |
+| bankrekening             | `str`                        | Bankrekeningnummer.                  |
+| girorekening             | `str`                        | Girorekening.                        |
+| btw_nummer               | `str`                        | BTW nummer.                          |
+| kvk_nummer               | `str`                        | KvK nummer.                          |
+| aanhef                   | `str`                        | Aanhef.                              |
+| iban                     | `str`                        | IBAN.                                |
+| bic                      | `str`                        | BIC van IBAN.                        |
+| def1                     | `str`                        | Vrij veld.                           |
+| def2                     | `str`                        | Vrij veld.                           |
+| def3                     | `str`                        | Vrij veld.                           |
+| def4                     | `str`                        | Vrij veld.                           |
+| def5                     | `str`                        | Vrij veld.                           |
+| def6                     | `str`                        | Vrij veld.                           |
+| def7                     | `str`                        | Vrij veld.                           |
+| def8                     | `str`                        | Vrij veld.                           |
+| def9                     | `str`                        | Vrij veld.                           |
+| def10                    | `str`                        | Vrij veld.                           |
+| la                       | `str`                        | * Ledenadministratie ('0' of '1').   |
+| gb_id                    | `int`                        | ...                                  |
+| geen_email               | `int`                        | ...                                  |
+| nieuwsbriefgroepen_count | `int`                        | ...                                  |
+
+**\* Ledenadministratie**: _Bevat standaard het cijfer 0, alleen als u gebruik maakt van de_
+_ledenadministratiemodule en het betreft een lid dan vult u hier het cijfer 1 in._
 
 ### Saldo
+
+Het `Saldo` object modelleert een regel op een [Mutatie](#mutatie).
+
+| Attribuut |  Type   |     Beschrijving     |
+| --------- | ------- | -------------------- |
+| id        | `int`   | Uniek identificatie nummer.       |
+| code      | `str`   | .       |
+| categorie | `str`   | .        |
+| saldo     | `float` | Het saldo. |
+
+## ENUM
+
+### BTW Code
+
+...
+
+### Eenheid
+
+...
+
+### In Ex BTW
+
+...
+
+### Incasso Machtiging Soort
+
+...
+
+### Mutatie Soort
+
+...
+
+### Relatie Type
 
 ...
 
