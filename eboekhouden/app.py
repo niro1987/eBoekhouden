@@ -418,8 +418,8 @@ class App:
                 "KostenPlaatsId": kostenplaats_id,
             },
         )
-        _LOGGER.debug("Saldo: %s", response["Saldo"])
-        return response["Saldo"]
+        serialized = serialize_response(response)
+        return serialized
 
     def add_relatie(self, relatie: models.Relatie) -> int:
         """Hiermee kunt u een relatie toevoegen aan het systeem."""
