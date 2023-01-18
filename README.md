@@ -19,9 +19,9 @@ gebasseerd op de openbare [API documentatie][api_doc].
     - [get\_relaties()](#get_relaties)
     - [get\_saldi()](#get_saldi)
     - [get\_saldo()](#get_saldo)
-    - [add\_relatie()](#add_relatie)
-    - [add\_mutatie()](#add_mutatie)
     - [add\_factuur()](#add_factuur)
+    - [add\_mutatie()](#add_mutatie)
+    - [add\_relatie()](#add_relatie)
     - [open\_session() en close\_session()](#open_session-en-close_session)
   - [Models](#models)
     - [Administratie](#administratie)
@@ -286,66 +286,6 @@ van de gespecificeerde grootboekrekening als een `float`.
 | grootboek_code  | `str` | Grootboek code.                                            |
 | kostenplaats_id | `int` | Optioneel. Uniek identificatie nummer van de kostenplaats. |
 
-### add\_relatie()
-
-Nieuwe relatie toevoegen. Geeft het uniek identificatie nummer van de aangemaakt
-[Relatie](#relatie). Geeft een `Exception` foutmelding als de relatie niet kan worden
-aangemaakt.
-
-| Parameter |   Type    |          Beschrijving           |
-| --------- | --------- | ------------------------------- |
-| relatie   | `Relatie` | Relatie object om aan te maken. |
-
-```py
-from eboekhouden import App, Relatie, RelatieType
-
-new_relatie: Relatie = Relatie(
-    bedrijf="SPAM",
-    code="EGGS",
-    relatie_type=RelatieType.BEDRIJF,
-)
-
-with App("Gebruikersnaam", "Beveiligingscode 1", "Beveiligingscode 2") as app:
-    new_relatie_id: int = app.add_relatie(new_relatie)
-```
-
-### add\_mutatie()
-
-Nieuwe mutatie toevoegen. Geeft het uniek identificatie nummer van de aangemaakt
-[Mutatie](#mutatie). Geeft een `Exception` foutmelding als de mutatie niet kan worden
-aangemaakt.
-
-| Parameter |   Type    |          Beschrijving           |
-| --------- | --------- | ------------------------------- |
-| mutatie   | `Mutatie` | Mutatie object om aan te maken. |
-
-```py
-from eboekhouden import App, Mutatie, MutatieSoort, MutatieRegel, BTWCode
-from datetime import datetime
-
-new_mutatie: Mutatie = Mutatie(
-    soort=MutatieSoort.GELD_ONTVANGEN,
-    datum=datetime.today(),
-    rekening="1000",  # Kas
-    omschrijving="SPAM_EGGS",
-    in_ex_btw=InExBTW.EX,
-    mutaties=[
-        MutatieRegel(
-            bedrag_invoer=1,
-            bedrag_excl_btw=1,
-            bedrag_btw=0.21,
-            bedrag_incl_btw=1.21,
-            btw_percentage=21,
-            btw_code=BTWCode.HOOG_VERK_21,
-            tegenrekening_code="1400",  # Eigen vermogen
-        ),
-    ],
-)
-
-with App("Gebruikersnaam", "Beveiligingscode 1", "Beveiligingscode 2") as app:
-    new_mutatie_id: int = app.add_mutatie(new_mutatie)
-```
-
 ### add\_factuur()
 
 Nieuwe factuur toevoegen. Geeft het uniek identificatie nummer van de aangemaakt
@@ -386,6 +326,66 @@ new_factuur: Factuur = Factuur(
 
 with App(USERNAME, SECURITY_CODE_1, SECURITY_CODE_2) as app:
     new_factuur_id: int = app.add_factuur(new_factuur)
+```
+
+### add\_mutatie()
+
+Nieuwe mutatie toevoegen. Geeft het uniek identificatie nummer van de aangemaakt
+[Mutatie](#mutatie). Geeft een `Exception` foutmelding als de mutatie niet kan worden
+aangemaakt.
+
+| Parameter |   Type    |          Beschrijving           |
+| --------- | --------- | ------------------------------- |
+| mutatie   | `Mutatie` | Mutatie object om aan te maken. |
+
+```py
+from eboekhouden import App, Mutatie, MutatieSoort, MutatieRegel, BTWCode
+from datetime import datetime
+
+new_mutatie: Mutatie = Mutatie(
+    soort=MutatieSoort.GELD_ONTVANGEN,
+    datum=datetime.today(),
+    rekening="1000",  # Kas
+    omschrijving="SPAM_EGGS",
+    in_ex_btw=InExBTW.EX,
+    mutaties=[
+        MutatieRegel(
+            bedrag_invoer=1,
+            bedrag_excl_btw=1,
+            bedrag_btw=0.21,
+            bedrag_incl_btw=1.21,
+            btw_percentage=21,
+            btw_code=BTWCode.HOOG_VERK_21,
+            tegenrekening_code="1400",  # Eigen vermogen
+        ),
+    ],
+)
+
+with App("Gebruikersnaam", "Beveiligingscode 1", "Beveiligingscode 2") as app:
+    new_mutatie_id: int = app.add_mutatie(new_mutatie)
+```
+
+### add\_relatie()
+
+Nieuwe relatie toevoegen. Geeft het uniek identificatie nummer van de aangemaakt
+[Relatie](#relatie). Geeft een `Exception` foutmelding als de relatie niet kan worden
+aangemaakt.
+
+| Parameter |   Type    |          Beschrijving           |
+| --------- | --------- | ------------------------------- |
+| relatie   | `Relatie` | Relatie object om aan te maken. |
+
+```py
+from eboekhouden import App, Relatie, RelatieType
+
+new_relatie: Relatie = Relatie(
+    bedrijf="SPAM",
+    code="EGGS",
+    relatie_type=RelatieType.BEDRIJF,
+)
+
+with App("Gebruikersnaam", "Beveiligingscode 1", "Beveiligingscode 2") as app:
+    new_relatie_id: int = app.add_relatie(new_relatie)
 ```
 
 ### open\_session() en close\_session()
