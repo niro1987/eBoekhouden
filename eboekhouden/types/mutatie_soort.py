@@ -6,22 +6,22 @@ class MutatieSoort(Enum):
     """Mutatie Soort"""
 
     FACTUUR_ONTVANGEN = "FactuurOntvangen"
-    """FactuurOntvangen"""
+    """Factuur ontvangen"""
 
     FACTUUR_VERSTUURD = "FactuurVerstuurd"
-    """FactuurVerstuurd"""
+    """Factuur verstuurd"""
 
     FACTUUR_BETALING_ONTVANGEN = "FactuurbetalingOntvangen"
-    """FactuurbetalingOntvangen"""
+    """Factuurbetaling ontvangen"""
 
     FACTUUR_BETALING_VERSTUURD = "FactuurbetalingVerstuurd"
-    """FactuurbetalingVerstuurd"""
+    """Factuurbetaling verstuurd"""
 
     GELD_ONTVANGEN = "GeldOntvangen"
-    """GeldOntvangen"""
+    """Geld ontvangen"""
 
     GELD_UITGEGEVEN = "GeldUitgegeven"
-    """GeldUitgegeven"""
+    """Geld uitgegeven"""
 
     MEMORIAAL = "Memoriaal"
     """Memoriaal"""

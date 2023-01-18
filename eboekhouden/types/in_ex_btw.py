@@ -6,7 +6,7 @@ class InExBTW(Enum):
     """In-of-Ex BTW."""
 
     IN = "IN"
-    """Inclusief BTW."""
+    """Inclusief BTW"""
 
     EX = "EX"
-    """Exclusief BTW."""
+    """Exclusief BTW"""

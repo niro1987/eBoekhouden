@@ -35,9 +35,10 @@ gebasseerd op de openbare [API documentatie][api_doc].
     - [Open Post](#open-post)
     - [Relatie](#relatie)
     - [Saldo](#saldo)
-  - [ENUM](#enum)
+  - [Types](#types)
     - [BTW Code](#btw-code)
     - [Eenheid](#eenheid)
+    - [Grootboek Categorie](#grootboek-categorie)
     - [In Ex BTW](#in-ex-btw)
     - [Incasso Machtiging Soort](#incasso-machtiging-soort)
     - [Mutatie Soort](#mutatie-soort)
@@ -512,13 +513,13 @@ Het `FactuurRegel` object modelleert een regel op een [Factuur](#factuur).
 
 Het `Grootboekrekening` object modelleert een grootboekrekening.
 
-|  Attribuut   | Type  |        Beschrijving         |
-| ------------ | ----- | --------------------------- |
-| id           | `int` | Uniek identificatie nummer. |
-| code         | `str` | Code.                       |
-| omschrijving | `str` | Omschrijving.               |
-| categorie    | `str` | Categorie.                  |
-| groep        | `str` | Groep.                      |
+|  Attribuut   |                    Type                    |        Beschrijving         |
+| ------------ | ------------------------------------------ | --------------------------- |
+| id           | `int`                                      | Uniek identificatie nummer. |
+| code         | `str`                                      | Code.                       |
+| omschrijving | `str`                                      | Omschrijving.               |
+| categorie    | [GrootboekCategorie](#grootboek-categorie) | Categorie.                  |
+| groep        | `str`                                      | Groep.                      |
 
 ### Kostenplaats
 
@@ -637,38 +638,99 @@ _ledenadministratiemodule en het betreft een lid dan vult u hier het cijfer 1 in
 
 Het `Saldo` object modelleert een regel op een [Mutatie](#mutatie).
 
-| Attribuut |  Type   |     Beschrijving     |
-| --------- | ------- | -------------------- |
-| id        | `int`   | Uniek identificatie nummer.       |
-| code      | `str`   | .       |
-| categorie | `str`   | .        |
-| saldo     | `float` | Het saldo. |
+| Attribuut |                    Type                    |           Beschrijving           |
+| --------- | ------------------------------------------ | -------------------------------- |
+| id        | `int`                                      | Uniek identificatie nummer.      |
+| code      | `str`                                      | Grootboekrekening code.          |
+| categorie | [GrootboekCategorie](#grootboek-categorie) | Categorie van grootboekrekening. |
+| saldo     | `float`                                    | Saldo.                           |
 
-## ENUM
+## Types
 
 ### BTW Code
 
-...
+|  Constante   |              Beschrijving               |
+| ------------ | --------------------------------------- |
+| HOOG_VERK    | BTW hoog, verkopen 19%                  |
+| HOOG_VERK_21 | BTW hoog, verkopen 21%                  |
+| LAAG_VERK    | * BTW laag, verkopen                    |
+| LAAG_VERK_9  | BTW laag, verkopen 9%                   |
+| VERL_VERK_L9 | BTW Verlegd 9% (1e op de btw-aangifte)  |
+| VERL_VERK    | BTW Verlegd 21% (1e op de btw-aangifte) |
+| AFW          | Afwijkend btw-tarief                    |
+| BU_EU_VERK   | Leveringen naar buiten de EU 0%         |
+| BI_EU_VERK   | Goederen naar binnen de EU 0%           |
+| BI_EU_VERK_D | Diensten naar binnen de EU 0%           |
+| AFST_VERK    | Afstandsverkopen naar binnen de EU 0%   |
+| LAAG_INK     | * BTW laag, inkopen                     |
+| LAAG_INK_9   | BTW laag, inkopen 9%                    |
+| VERL_INK_L9  | BTW verlegd, laag, inkopen              |
+| HOOG_INK     | BTW hoog, inkopen                       |
+| HOOG_INK_21  | BTW hoog, inkopen 21%                   |
+| VERL_INK     | BTW verlegd, hoog, inkopen              |
+| AFW_VERK     | Afwijkend btw-tarief verkoop            |
+| BU_EU_INK    | Leveringen/diensten van buiten de EU 0% |
+| BI_EU_INK    | Leveringen/diensten van binnen de EU 0% |
+| GEEN         | Geen BTW                                |
+
+**\*** _Indien de boekdatum in 2019 of er na valt, wordt 9% aangehouden, daarvoor 6%._
 
 ### Eenheid
 
-...
+| Constante | Beschrijving |
+| --------- | ------------ |
+| GEEN      | Niet bepaald |
+| STUK      | Per stuk     |
+| DOOS      | Per doos     |
+| UUR       | Per uur      |
+
+### Grootboek Categorie
+
+|    Constante     |      Beschrijving       |
+| ---------------- | ----------------------- |
+| BALANS           | Balans                  |
+| WINST_EN_VERLIES | Winst & Verlies         |
+| BETAALMIDDELEN   | Betalingsmiddelen       |
+| BTW_LAAG         | BTW af te dragen Laag   |
+| BTW_HOOG         | BTW af te dragen Hoog   |
+| BTW_OVERIG       | BTW af te dragen overig |
+| BTWRC            | BTW Rekening Courant    |
+| DEBITEUR         | Debiteuren              |
+| CREDITEUR        | Crediteuren             |
+| VOORBELASTING    | Voorbelasting           |
 
 ### In Ex BTW
 
-...
+| Constante | Beschrijving  |
+| --------- | ------------- |
+| IN        | Inclusief BTW |
+| EX        | Exclusief BTW |
 
 ### Incasso Machtiging Soort
 
-...
+| Constante  |      Beschrijving      |
+| ---------- | ---------------------- |
+| EENMALIG   | Eenmalige machtiging   |
+| DOORLOPEND | Doorlopende machtiging |
 
 ### Mutatie Soort
 
-...
+|         Constante          |       Beschrijving        |
+| -------------------------- | ------------------------- |
+| FACTUUR_ONTVANGEN          | Factuur ontvangen         |
+| FACTUUR_VERSTUURD          | Factuur verstuurd         |
+| FACTUUR_BETALING_ONTVANGEN | Factuurbetaling ontvangen |
+| FACTUUR_BETALING_VERSTUURD | Factuurbetaling verstuurd |
+| GELD_ONTVANGEN             | Geld ontvangen            |
+| GELD_UITGEGEVEN            | Geld uitgegeven           |
+| MEMORIAAL                  | Memoriaal                 |
 
 ### Relatie Type
 
-...
+|  Constante  | Beschrijving |
+| ----------- | ------------ |
+| PARTICULIER | Particulier  |
+| BEDRIJF     | Bedrijf      |
 
 ***
 

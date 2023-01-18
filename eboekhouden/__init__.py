@@ -19,6 +19,7 @@ from .models import (
 from .types import (
     BTWCode,
     Eenheid,
+    GrootboekCategorie,
     IncassoMachtigingSoort,
     InExBTW,
     MutatieSoort,
@@ -36,6 +37,7 @@ __all__ = [
     "Eenheid",
     "Factuur",
     "FactuurRegel",
+    "GrootboekCategorie",
     "Grootboekrekening",
     "IncassoMachtigingSoort",
     "InExBTW",
