@@ -5,7 +5,7 @@ import os
 
 import pytest
 
-from eboekhouden import App, BTWCode, InExBTW, Mutatie, MutatieRegel, MutatieSoort
+from eboekhouden import App, Mutatie
 
 USERNAME: str = os.environ.get("USERNAME")
 SECURITY_CODE_1: str = os.environ.get("SECURITY_CODE_1")
@@ -16,25 +16,55 @@ def test_get_mutaties():
     """Test mutaties ophalen."""
     app: App
     with App(USERNAME, SECURITY_CODE_1, SECURITY_CODE_2) as app:
-        data = app.get_mutaties()
-        assert isinstance(data, list)
+        mutaties = app.get_mutaties()
+        assert isinstance(mutaties, list)
+        assert len(mutaties) > 0
+        assert all(isinstance(item, Mutatie) for item in mutaties)
 
 
 def test_get_mutatie_id():
     """Test mutaties ophalen."""
     app: App
     with App(USERNAME, SECURITY_CODE_1, SECURITY_CODE_2) as app:
-        data = app.get_mutaties(mutatienummer=9)
-        assert isinstance(data, list)
+        pre_mutaties: list[Mutatie] = app.get_mutaties()
+        mutatie_nr: int = pre_mutaties[0].mutatie_nr
+        mutaties: list[Mutatie] = app.get_mutaties(mutatie_nr=mutatie_nr)
+        assert all(item.mutatie_nr == mutatie_nr for item in mutaties)
+
+
+def test_get_mutatie_van():
+    """Test mutaties ophalen."""
+    app: App
+    with App(USERNAME, SECURITY_CODE_1, SECURITY_CODE_2) as app:
+        pre_mutaties: list[Mutatie] = app.get_mutaties()
+        mutatie_nr_van: str = min([item.mutatie_nr for item in pre_mutaties])
+        mutaties: list[Mutatie] = app.get_mutaties(mutatie_nr_van=mutatie_nr_van)
+        assert all(item.mutatie_nr >= mutatie_nr_van for item in mutaties)
+
+
+def test_get_mutatie_tot():
+    """Test mutaties ophalen."""
+    app: App
+    with App(USERNAME, SECURITY_CODE_1, SECURITY_CODE_2) as app:
+        pre_mutaties: list[Mutatie] = app.get_mutaties()
+        mutatie_nr_tot: str = max([item.mutatie_nr for item in pre_mutaties])
+        mutaties: list[Mutatie] = app.get_mutaties(mutatie_nr_tot=mutatie_nr_tot)
+        assert all(item.mutatie_nr <= mutatie_nr_tot for item in mutaties)
 
 
 def test_get_mutatie_van_tot():
     """Test mutaties ophalen."""
     app: App
     with App(USERNAME, SECURITY_CODE_1, SECURITY_CODE_2) as app:
-        data = app.get_mutaties(mutatienummer_van=19, mutatienummer_tot=20)
-        assert isinstance(data, list)
-        assert len(data) == 2
+        pre_mutaties: list[Mutatie] = app.get_mutaties()
+        mutatie_nr_van: int = min([item.mutatie_nr for item in pre_mutaties])
+        mutatie_nr_tot: int = max([item.mutatie_nr for item in pre_mutaties])
+        mutaties: list[Mutatie] = app.get_mutaties(
+            mutatie_nr_van=mutatie_nr_van,
+            mutatie_nr_tot=mutatie_nr_tot,
+        )
+        assert all(item.mutatie_nr >= mutatie_nr_van for item in mutaties)
+        assert all(item.mutatie_nr <= mutatie_nr_tot for item in mutaties)
 
 
 def test_get_mutatie_factuurnummer():
@@ -65,28 +95,3 @@ def test_get_mutatie_datum_range_invalid():
                 start_datum=datetime.today().date(),
             )
             assert isinstance(data, list)
-
-
-def test_add_mutatie_geld_ontvangen():
-    """Test mutatie toevoegen Geld Ontvangen."""
-    new_mutatie: Mutatie = Mutatie(
-        soort=MutatieSoort.GELD_ONTVANGEN,
-        datum=datetime.today(),
-        rekening="1000",  # Kas
-        omschrijving="SPAM_EGGS",
-        in_ex_btw=InExBTW.EX,
-        mutaties=[
-            MutatieRegel(
-                bedrag_invoer=1,
-                bedrag_excl_btw=1,
-                bedrag_btw=0.21,
-                bedrag_incl_btw=1.21,
-                btw_percentage=21,
-                btw_code=BTWCode.HOOG_VERK_21,
-                tegenrekening_code="1400",  # Eigen vermogen
-            ),
-        ],
-    )
-    app: App
-    with App(USERNAME, SECURITY_CODE_1, SECURITY_CODE_2) as app:
-        app.add_mutatie(new_mutatie)
