@@ -50,7 +50,7 @@ class FactuurRegel(ModelBase):  # pylint: disable=too-many-instance-attributes
     """Factuur Regel"""
 
     aantal: float | None = None
-    eenheid: Eenheid | None = Eenheid.GEEN
+    eenheid: Eenheid | None = None
     code: str | None = None
     omschrijving: str | None = None
     prijs_per_eenheid: float | None = None
