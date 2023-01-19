@@ -261,9 +261,9 @@ class App:
     def get_mutaties(
         self,
         *,
-        mutatienummer: int | None = None,
-        mutatienummer_van: int | None = None,
-        mutatienummer_tot: int | None = None,
+        mutatie_nr: int | None = None,
+        mutatie_nr_van: int | None = None,
+        mutatie_nr_tot: int | None = None,
         factuurnummer: str | None = None,
         start_datum: datetime | None = None,
         eind_datum: datetime | None = None,
@@ -276,11 +276,11 @@ class App:
 
         Parameters
         ----------
-        mutatienummer : int
+        mutatie_nr : int
             Zoek op `mutatienummer`.
-        mutatienummer_van : int
+        mutatie_nr_van : int
             Zoek op `mutatienummer` bereik.
-        mutatienummer_tot : int
+        mutatie_nr_tot : int
             Zoek op `mutatienummer` bereik.
         factuurnummer : str
             Zoek op `factuurnummer`.
@@ -296,27 +296,22 @@ class App:
         list[Mutatie]
             Lijst van overeenkomende mutaties.
         """
-        if (mutatienummer_van is not None and mutatienummer_tot is not None) and (
-            mutatienummer_van > mutatienummer_tot
+        if (mutatie_nr_van is not None and mutatie_nr_tot is not None) and (
+            mutatie_nr_van > mutatie_nr_tot
         ):
             raise ValueError(
-                "Parameter `mutatienummer_van` mag niet groter zijn dan "
-                "`mutatienummer_tot`"
-            )
-        if (start_datum or eind_datum) and not (start_datum and eind_datum):
-            raise ValueError(
-                "Parameter `start_datum` en `eind_datum` moeten altijd in combinatie "
-                "met elkaar gebruikt worden."
+                "Parameter `mutatie_nr_van` mag niet groter zijn dan "
+                "`mutatie_nr_tot`"
             )
         filters: dict[str, str] = {
-            "MutatieNr": mutatienummer or 0,
+            "MutatieNr": mutatie_nr or 0,
             "DatumVan": start_datum or datetime(1900, 1, 1),
             "DatumTm": eind_datum or datetime(2200, 1, 1),
         }
-        if mutatienummer_van:
-            filters["MutatieNrVan"] = mutatienummer_van
-        if mutatienummer_tot:
-            filters["MutatieNrTm"] = mutatienummer_tot
+        if mutatie_nr_van:
+            filters["MutatieNrVan"] = mutatie_nr_van
+        if mutatie_nr_tot:
+            filters["MutatieNrTm"] = mutatie_nr_tot
         if factuurnummer:
             filters["Factuurnummer"] = factuurnummer
         _LOGGER.info(filters)

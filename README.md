@@ -209,14 +209,14 @@ filteren. Geeft een `list` van één of meer [Mutaties](#mutatie).
 Er zullen nooit meer dan de laatste 500 mutaties opgehaald worden. Voor deze functie geldt een
 maximum van 5.000 calls per maand.
 
-|     Parameter     |    Type    |                                       Beschrijving                                       |
-| ----------------- | ---------- | ---------------------------------------------------------------------------------------- |
-| mutatienummer     | `int`      | Filter mutaties op basis van uniek identificatie nummer.                                 |
-| mutatienummer_van | `int`      | Filter mutaties vanaf uniek identificatie nummer.                                        |
-| mutatienummer_tot | `int`      | Filter mutaties tot en met uniek identificatie nummer.                                   |
-| factuurnummer     | `str`      | Filter mutaties op basis van het bijbehorende factuurnummer.                             |
-| start_datum       | `datetime` | Filter mutaties op basis van de mutatiedatum, verplicht in combinatie met `eind_datum`.  |
-| eind_datum        | `datetime` | Filter mutaties op basis van de mutatiedatum, verplicht in combinatie met `start_datum`. |
+|   Parameter    |    Type    |                                       Beschrijving                                       |
+| -------------- | ---------- | ---------------------------------------------------------------------------------------- |
+| mutatie_nr     | `int`      | Filter mutaties op basis van uniek identificatie nummer.                                 |
+| mutatie_nr_van | `int`      | Filter mutaties vanaf uniek identificatie nummer.                                        |
+| mutatie_nr_tot | `int`      | Filter mutaties tot en met uniek identificatie nummer.                                   |
+| factuurnummer  | `str`      | Filter mutaties op basis van het bijbehorende factuurnummer.                             |
+| start_datum    | `datetime` | Filter mutaties op basis van de mutatiedatum, verplicht in combinatie met `eind_datum`.  |
+| eind_datum     | `datetime` | Filter mutaties op basis van de mutatiedatum, verplicht in combinatie met `start_datum`. |
 
 ```py
 from eboekhouden import App, Mutatie
