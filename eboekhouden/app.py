@@ -211,25 +211,14 @@ class App:
         list[Factuur]
             Lijst van overeenkomende facturen.
         """
-        if relatiecode and not (start_datum and eind_datum):
-            raise ValueError(
-                "Parameter `relatiecode` moet altijd gebruikt worden in combinatie met "
-                "`start_datum` en `eind_datum`."
-            )
-        if (start_datum or eind_datum) and not (start_datum and eind_datum):
-            raise ValueError(
-                "Parameter `start_datum` en `eind_datum` moeten altijd in combinatie "
-                "met elkaar gebruikt worden."
-            )
-        filters: dict[str, str] = {}
+        filters: dict[str, str] = {
+            "DatumVan": start_datum or datetime(1900, 1, 1),
+            "DatumTm": eind_datum or datetime(2200, 1, 1),
+        }
         if factuurnummer:
             filters["Factuurnummer"] = factuurnummer
         if relatiecode:
             filters["Relatiecode"] = relatiecode
-        if start_datum:
-            filters["DatumVan"] = start_datum
-        if eind_datum:
-            filters["DatumTm"] = eind_datum
         response = self.client.service.GetFacturen(
             SessionID=self.session_id,
             SecurityCode2=self.security_code_2,
