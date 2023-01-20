@@ -1,4 +1,5 @@
 """Mutatie model."""
+
 from dataclasses import dataclass
 from datetime import datetime
 import logging
@@ -19,7 +20,6 @@ NAME_MAPPING: dict[str, str] = {
     "betalingstermijn": "Betalingstermijn",
     "betalingskenmerk": "Betalingskenmerk",
     "in_ex_btw": "InExBTW",
-    # "mutaties": ("MutatieRegels", "cMutatieListRegel"),
     "mutaties": "MutatieRegels",
 }
 NAME_MAPPING_LIST: dict[str, str] = {

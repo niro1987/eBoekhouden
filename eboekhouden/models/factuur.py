@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from datetime import datetime
 
 from eboekhouden.model import ModelBase
-from eboekhouden.types import BTWCode, Eenheid, IncassoMachtigingSoort
+from eboekhouden.types import BTWCode, IncassoMachtigingSoort
 
 NAME_MAPPING: dict[str, str] = {
     "factuurnummer": "Factuurnummer",
@@ -50,7 +50,7 @@ class FactuurRegel(ModelBase):  # pylint: disable=too-many-instance-attributes
     """Factuur Regel"""
 
     aantal: float | None = None
-    eenheid: Eenheid | None = None
+    eenheid: str | None = None
     code: str | None = None
     omschrijving: str | None = None
     prijs_per_eenheid: float | None = None
